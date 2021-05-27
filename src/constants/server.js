@@ -9,7 +9,7 @@ export const SERVER_LIST = {
     name: '정찬영',
     nickname: '마갸',
     imgSrc: imageMagya,
-    endpoint: 'https://subway-myagya.kro.kr',
+    endpoint: 'https://subway-myagya.kro.kr/api',
   },
   Sally: {
     id: 'Sally',
