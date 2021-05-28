@@ -20,7 +20,7 @@ const getStations = createAsyncThunk('station/getStations', async ({ endpoint, a
     }
   } catch (e) {
     console.error(e.response.data);
-    thunkAPI.rejectWithValue(e.response.data);
+    return thunkAPI.rejectWithValue(e.response.data);
   }
 });
 
@@ -47,7 +47,7 @@ const addStation = createAsyncThunk('station/addStation', async ({ endpoint, acc
     }
   } catch (e) {
     console.error(e.response.data);
-    thunkAPI.rejectWithValue(e.response.data);
+    return thunkAPI.rejectWithValue(e.response.data);
   }
 });
 
@@ -62,12 +62,13 @@ const removeStation = createAsyncThunk('station/removeStation', async ({ endpoin
 
     if (response.status === 204) {
       return { id };
-    } else {
-      throw new Error(response.body.error);
     }
+
+    const { message } = await response.json();
+    throw new Error(message);
   } catch (e) {
     console.error(e);
-    thunkAPI.rejectWithValue(e);
+    return thunkAPI.rejectWithValue(e);
   }
 });
 
@@ -131,7 +132,7 @@ const stationSlice = createSlice({
     [removeStation.pending]: (state) => {
       state.isLoading = true;
     },
-    [removeStation.rejected]: (state) => {
+    [removeStation.rejected]: (state, action) => {
       state.isDeleteFail = true;
       state.isLoading = false;
     },

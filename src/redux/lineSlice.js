@@ -15,12 +15,15 @@ const getLines = createAsyncThunk('line/getLines', async ({ endpoint, accessToke
 
     if (response.status === 200) {
       return { lines: body };
-    } else {
-      throw new Error(body);
     }
+
+    // else {
+    //   throw new Error(body);
+    // }
+    throw new Error(body.message);
   } catch (e) {
-    console.error(e.response.data);
-    thunkAPI.rejectWithValue(e.response.data);
+    console.error(e);
+    return thunkAPI.rejectWithValue(e);
   }
 });
 
@@ -55,12 +58,15 @@ const addLine = createAsyncThunk(
           distance,
           color,
         };
-      } else {
-        throw new Error(body);
       }
+
+      // else {
+      //   throw new Error(body);
+      // }
+      throw new Error(body.message);
     } catch (e) {
       console.error(e.response.data);
-      thunkAPI.rejectWithValue(e.response.data);
+      return thunkAPI.rejectWithValue(e.response.data);
     }
   },
 );
@@ -74,12 +80,14 @@ const removeLine = createAsyncThunk('line/removeLine', async ({ endpoint, access
 
     if (response.status === 204) {
       return { id };
-    } else {
-      throw new Error('삭제를 실패하였습니다.');
     }
+
+    const { message } = await response.json();
+
+    throw new Error(message);
   } catch (e) {
     console.error(e);
-    thunkAPI.rejectWithValue(e);
+    return thunkAPI.rejectWithValue(e);
   }
 });
 
